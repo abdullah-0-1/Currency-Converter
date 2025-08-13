@@ -4,6 +4,9 @@
 This project is a **microservices-based currency converter** application built with **Spring Boot** and a lightweight **Flask + HTML** frontend (AI-assisted design).  
 **The main focus is on backend architecture** — implementing service discovery, routing, distributed tracing, and containerized deployment.
 
+![Currency Converter Screenshot](Currency-Converter/Screenshot/ss.png)
+
+
 ## 🚀 Features
 - **Spring Boot Microservices** for currency exchange and conversion
 - **Eureka Server** for service discovery

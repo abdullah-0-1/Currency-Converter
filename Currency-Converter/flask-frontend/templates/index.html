@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Currency Converter</title>
+  <style>
+    body {
+      background: #f7f6fb;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .converter-card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(80, 0, 80, 0.12);
+      padding: 40px 32px 32px 32px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+    .converter-card h1 {
+      font-size: 1.6rem;
+      color: #6c3483;
+      margin-bottom: 16px;
+      letter-spacing: 1px;
+    }
+    .converter-card .rate {
+      font-size: 1.1rem;
+      color: #333;
+      margin-bottom: 24px;
+    }
+    .converter-form {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .converter-form input {
+      width: 80px;
+      padding: 10px;
+      border: 1px solid #d1c4e9;
+      border-radius: 6px;
+      font-size: 1rem;
+      text-align: center;
+      background: #f3f0fa;
+      color: #333;
+    }
+    .arrow {
+      font-size: 1.5rem;
+      color: #6c3483;
+      margin: 0 8px;
+    }
+    .converter-card button {
+      width: 100%;
+      padding: 12px;
+      background: #6c3483;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      margin-bottom: 16px;
+      transition: background 0.2s;
+    }
+    .converter-card button:hover {
+      background: #512e5f;
+    }
+    .result {
+      font-weight: bold;
+      color: #6c3483;
+      font-size: 1.2rem;
+      min-height: 24px;
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="converter-card">
+    <h1>CURRENCY CONVERTER</h1>
+    <div class="rate" id="rateText">Enter values to see conversion</div>
+    <form id="conversionForm" class="converter-form">
+      <input type="text" id="fromCurrency" name="fromCurrency" placeholder="USD" required>
+      <span class="arrow">&#8594;</span>
+      <input type="text" id="toCurrency" name="toCurrency" placeholder="PKR" required>
+      <input type="number" id="quantity" name="quantity" placeholder="1" required min="1">
+    </form>
+    <button type="submit" form="conversionForm">Result</button>
+    <div class="result" id="result"></div>
+  </div>
+  <script>
+    const form = document.getElementById('conversionForm');
+    const resultDiv = document.getElementById('result');
+    const rateText = document.getElementById('rateText');
+
+    document.querySelector('button[form="conversionForm"]').addEventListener('click', async (event) => {
+      event.preventDefault();
+
+      const formData = new FormData(form);
+      const fromCurrency = formData.get('fromCurrency');
+      const toCurrency = formData.get('toCurrency');
+      const quantity = formData.get('quantity');
+
+      try {
+        const response = await fetch('/convert', {
+          method: 'POST',
+          body: formData
+        });
+        const result = await response.json();
+
+        if (result.success) {
+          resultDiv.innerText = `Converted Amount: ${result.convertedAmount}`;
+          rateText.innerText = `${quantity} ${fromCurrency} equals ${result.convertedAmount} ${toCurrency}`;
+        } else {
+          resultDiv.innerText = `Error: ${result.error}`;
+          rateText.innerText = "Conversion failed";
+        }
+      } catch (error) {
+        resultDiv.innerText = `Error: ${error.message}`;
+        rateText.innerText = "Conversion failed";
+      }
+    });
+  </script>
+</body>
+</html>
